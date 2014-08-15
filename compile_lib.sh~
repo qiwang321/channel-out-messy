@@ -1,0 +1,2 @@
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/nvmatrix_test/lib
+nvcc  --shared -o lib/libconv.so -I./include -I./include/common -I./include/cudaconv2 -I./include/nvmatrix -L./lib /scratch0/qwang37/atlas-base -lcblas -lcublas ./src/common/*.cu ./src/cudaconv2/*.cu ./src/nvmatrix/*.cu --compiler-options '-fPIC'

@@ -1,0 +1,67 @@
+/*
+ * read_data.cpp
+ *
+ *  Created on: Jul 3, 2013
+ *      Author: qwang37
+ */
+
+#include <iostream>
+#include <fstream>
+#include <string.h>
+
+#include <matrix.h>
+//#include <matrix_funcs.h>
+using namespace std;
+
+int main() {
+	//printf("program start...\n");
+	char* file_name = "cifar-10-batches-bin/data_batch_1.bin";
+	ifstream in;
+	try {
+		in.open(file_name);
+	}
+	catch(ifstream::failure& e){
+		cout<<"file open failure!\n";
+	}
+
+	MTYPE* data = (float*) malloc(200*3072*sizeof(MTYPE));
+	MTYPE* labels = (float*) malloc(200*sizeof(MTYPE));
+	char tmp;
+	for (int i = 0; i < 200; i++) {
+		tmp = in.get();
+		labels[i] = tmp;
+		for (int j = 0; j < 3072; j++) {
+			data[i*3072+j] = MTYPE(in.get());
+		}
+	}
+
+	for (int j = 1; j < 10; j++)
+		printf("%4.2lf ", data[j]);
+
+	printf("\nreading successful!\n");
+
+	Matrix *m1 = new Matrix(data, 200, 3072);
+
+	// second set of data
+	for (int i = 0; i < 200; i++) {
+		tmp = in.get();
+		labels[i] = tmp;
+		for (int j = 0; j < 3072; j++) {
+			data[i*3072+j] = MTYPE(in.get());
+		}
+	}
+	Matrix *m2 = new Matrix(data, 200, 3072);
+	
+	Matrix *m3 = new Matrix();
+	m1->rightMult(m2->transpose(), *m3);
+	
+	MTYPE* res = m3->getData();
+	for (int i = 0; i < 200; i++) {
+		for (int j = 0; j < 200; j++) {
+			printf("%4.2lf ", res[i*200+j]);
+		}
+		printf("\n");
+	}
+
+}
+

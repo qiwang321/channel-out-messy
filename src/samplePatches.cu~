@@ -1,0 +1,34 @@
+#include <iostream>
+#include <fstream>
+#include <stdlib.h>
+#include "matrix.cuh"
+using namespace std;
+
+void samplePatches(int patchSize, int numPatches, int[] dims, int numRecords, char[] file_name) {
+	ifstream in;
+	in.open(file_name);
+	if in.fail() {
+		printf("data file open failed!\n");
+		exit(-1);
+	}
+	// load all data
+	int dimall = dims[0]*dims[1]*dims[2];
+	MTYPE* data = (MTYPE*) malloc(numRecords*dimall*sizeof(MTYPE));
+
+	// data is row-major: pixels->channels->images
+	for (int i = 0; i < numRecords; i++) {
+		in.get();
+		for(int j = 0; j < dimall; j++) {
+			in.read((char*)(data+i*dimall+j), sizeof(MTYPE));
+		}
+	}
+
+	int numelPatch = patchSize*patchSize*dims[2];
+	MTYPE* patches = (MTYPE*) malloc(numPatches*numelPatch*sizeof(MTYPE));
+	srand(time(NULL));
+	for (int i = 0; i < numPatches; i++) {
+		// first determine the position of the patch
+		int recordIdx = rand() % numRecords;
+		int pixelX = rand() % (dims[0] - patchSize + 1);
+		int pixelY = rand() % (dims[1] - patchSize + 1);
+		

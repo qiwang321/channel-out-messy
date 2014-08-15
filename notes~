@@ -1,0 +1,9 @@
+the only dropUpdate parameter setting that succeeded so far: 0.2 keep rate, 128 epochs for first stage, 0.003/6-0.0003-0.00003 learning rate (84.4%)
+
+On full size data set the best result achieved so far 86.4%/85.6% using 1.0 perturbation on 3/4 layer.
+
+The reason that max-out network works: trained sparse models while at test time the system can know which model to choose (avoid information to be encoded into different places)
+
+best on augmented data 87.1% (without multiView test)/ 89.41% (with multiView test)
+
+9/17: best result on cifar32 so far :86.65% using maxout+dropout (with perturbation, best 86.71%, training precision 91%); best result with competeOut: 85.71% with training precision only 90%; 86.2% with training precision 95%.
